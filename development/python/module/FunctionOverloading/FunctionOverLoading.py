@@ -116,17 +116,39 @@ class OLF_Function_typ():
 			instanceTypeName = sub('_typ', '',type(instance).__name__)
 			key = self.keyFunction( [instanceTypeName] + argTypesList, prefix = self.name)
 
-		if key in self.funcDict:
-			if instance is None:
-				return self.funcDict[key].ptr(*args, **kwargs)
-			else:
-				return self.funcDict[key].ptr(instance, *args, **kwargs)
+		key = self.signitueResolution(key)
+		if key is None: return
 
-		#if key doens't exist in funcDict return warning
+		if instance is None:
+			return self.funcDict[key].ptr(*args, **kwargs)
+		else:
+			return self.funcDict[key].ptr(instance, *args, **kwargs)
+
+	def signitueResolution(self, key):
+
+		#return key if exact match if found
+		if key in self.funcDict: return key
+
+		# return signature if the key can be converted to a match
+		# NOTE: we are returning the first match found, if may not be the best match available
+		for signature in self.funcDict:
+			if signitureConversionMatch(key, signature): return signature
+
+		#if key doesn't exist in funcDict and cant be converted issue a warning and return none
+		print(''.center(50,'*'))
 		print(f'\t"{key}"\n')
 		print(f'Is not in overloaded function "{self.name}".  The defined keys are:')
 		print()
-		self.man()
+		print(self.man(printString=False))
+		print()
+		print('defined conversion:')
+		for key, value in OLF_ConversionTable.items():
+			print(f'{key.rjust(25)}: {value}')
+
+
+		input()
+
+		return None
 
 	def man(self, space = 0., printString=True):
 		#return a list of valid keys
