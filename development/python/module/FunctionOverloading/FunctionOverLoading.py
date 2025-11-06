@@ -61,16 +61,14 @@ def signitureConversionMatch(key, signiture):
 def createKey(argTypeList, **kwArgs):
 	return tuple(argTypeList)
 
-
 def createKey1(OLF_functionToken):
 	return tuple(OLF_functionToken.argTypeList)
-
 
 class OLF_Token_typ():
 
 	def __init__(self, fn, keyFunction = createKey1):
 
-		#set function to create unique function signitures.
+		#set function to create unique function signatures.
 		#keyFunction() must return a hashable object
 		self.keyFunction  = keyFunction
 
@@ -78,8 +76,8 @@ class OLF_Token_typ():
 		if fn is not None:
 			self.name         = fn.__name__
 			self.ptr          = fn
-			self.argTypeList  = [value[1].__name__ for value in fn.__annotations__.items()] #I need to chack for return values, this could cause me problems
-			self.argNameList  = [value[0]          for value in fn.__annotations__.items()] #I need to chack for return values, this could cause me problems
+			self.argTypeList  = [value[1].__name__ for value in fn.__annotations__.items()] #I need to check for return values, this could cause me problems
+			self.argNameList  = [value[0]          for value in fn.__annotations__.items()] #I need to check for return values, this could cause me problems
 			#self.returnType   = 
 			self.numVars      = len(self.argNameList)
 			self.signiture    = self.createKey()
@@ -143,7 +141,7 @@ class OLF_Function_typ():
 
 
 	def __get__(self, instance, owner):
-		#this fucntion is required to get the instance of the base calss to pass through
+		#this fucntion is required to get the instance of the base class to pass through
 		return MethodType(self, instance) if instance else self
 
 class OLF_Dict_typ():
@@ -153,8 +151,8 @@ class OLF_Dict_typ():
 
 	def addFunction(self, fn):
 
-		#create a new entrly if this is the first time this
-		#funciton name has been added to this dictionary
+		#create a new entry if this is the first time this
+		#function name has been added to this dictionary
 		if fn.__name__ not in self.funcDict:
 			self.funcDict[fn.__name__] = OLF_Function_typ(fn.__name__)
 
