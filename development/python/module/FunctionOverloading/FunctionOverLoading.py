@@ -30,7 +30,7 @@ OLF_ConversionTable['float']    = [ 'c_float',      #| float                    
 
 OLF_ConversionTable['str']      = ['c_wchar_p']
 
-def signitureConversionMatch(key, signiture):
+def signitureConversionMatch(key, signiture, table = OLF_ConversionTable):
 	# key       :tuple of argument types used to call a function
 	# signature :tuple of argument types used to uniquely define a function
 
@@ -50,10 +50,10 @@ def signitureConversionMatch(key, signiture):
 		if key[index] == arg: continue
 
 		# return false if there are no defined conversion for key[index]
-		if key[index] not in OLF_ConversionTable: return False
+		if key[index] not in table: return False
 
 		# return false there is no valid conversion
-		if arg not in OLF_ConversionTable[key[index]]: return False
+		if arg not in table[key[index]]: return False
 
 	# return true if all key arguments can be converted
 	return True
@@ -88,9 +88,10 @@ class OLF_Token_typ():
 class OLF_Function_typ():
 
 	def __init__(self, name):
-		self.name         = name
-		self.funcDict     = {}
-		self.keyFunction  = createKey
+		self.name            = name
+		self.funcDict        = {}
+		self.keyFunction     = createKey
+		self.conversionTable = OLF_ConversionTable
 
 	def addFunction(self, fn, keyFunction = createKey1):
 
@@ -132,7 +133,7 @@ class OLF_Function_typ():
 		# return signature if the key can be converted to a match
 		# NOTE: we are returning the first match found, if may not be the best match available
 		for signature in self.funcDict:
-			if signitureConversionMatch(key, signature): return signature
+			if signitureConversionMatch(key, signature, self.conversionTable): return signature
 
 		#if key doesn't exist in funcDict and cant be converted issue a warning and return none
 		print(''.center(50,'*'))
@@ -142,7 +143,7 @@ class OLF_Function_typ():
 		print(self.man(printString=False))
 		print()
 		print('defined conversion:')
-		for key, value in OLF_ConversionTable.items():
+		for key, value in self.conversionTable.items():
 			print(f'{key.rjust(25)}: {value}')
 
 
