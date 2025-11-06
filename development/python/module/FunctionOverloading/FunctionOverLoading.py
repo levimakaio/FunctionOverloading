@@ -29,6 +29,35 @@ OLF_ConversionTable['float']    = [ 'c_float',      #| float                    
                                     'c_longdouble'] #| long double                            | float
 
 OLF_ConversionTable['str']      = ['c_wchar_p']
+
+def signitureConversionMatch(key, signiture):
+	# key       :tuple of argument types used to call a function
+	# signature :tuple of argument types used to uniquely define a function
+
+	#This function will use the OLF_converisontable to see if the key and
+	#signature match if the key is allowed to be cast in accordance with the
+	#conversion table
+
+	#check that key and signature have matching lengths,
+	#return false if they do not
+	if not len(key) == len(signiture): return False
+
+	#check each argument of the signature for conversion matches with the key.
+	#If any of the keys can not be converted return False
+	for index, arg in enumerate(signiture):
+
+		#check for an exact match
+		if key[index] == arg: continue
+
+		# return false if there are no defined conversion for key[index]
+		if key[index] not in OLF_ConversionTable: return False
+
+		# return false there is no valid conversion
+		if arg not in OLF_ConversionTable[key[index]]: return False
+
+	# return true if all key arguments can be converted
+	return True
+
 def createKey(argTypeList, **kwArgs):
 	return tuple(argTypeList)
 
