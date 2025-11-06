@@ -114,7 +114,8 @@ class OLF_Function_typ():
 			#get the key based on the args of the fucntion call
 			key = self.keyFunction(argTypesList, prefix = self.name)
 		else:
-			instanceTypeName = sub('_typ', '',type(instance).__name__)
+			instanceTypeName = type(instance).__name__
+#			instanceTypeName = sub('_typ', '',type(instance).__name__)
 			key = self.keyFunction( [instanceTypeName] + argTypesList, prefix = self.name)
 
 		key = self.signitueResolution(key)
@@ -151,7 +152,7 @@ class OLF_Function_typ():
 
 		return None
 
-	def man(self, space = 0., printString=True):
+	def man(self, space = 0, printString=True):
 		#return a list of valid keys
 		returnString = ''
 		for key in self.funcDict:
