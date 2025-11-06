@@ -1,6 +1,34 @@
 from types import MethodType
 from re    import sub
 
+OLF_ConversionTable = {}
+OLF_ConversionTable['bool']   = ['c_bool']
+
+OLF_ConversionTable['int']      = [ 'c_byte',       #| char                                   | int
+                                    'c_ubyte',      #| unsigned char                          | int
+                                    'c_short',      #| short                                  | int
+                                    'c_ushort',     #| unsigned short                         | int
+                                    'c_int',        #| int                                    | int
+                                    'c_uint',       #| unsigned int                           | int
+                                    'c_long',       #| long                                   | int
+                                    'c_ulong',      #| unsigned long                          | int
+                                    'c_longlong',   #| __int64 or long long                   | int
+                                    'c_ulonglong',  #| unsigned __int64 or unsigned long long | int
+                                    'c_size_t',     #| size_t                                 | int
+                                    'c_ssize_t',    #| ssize_t or Py_ssize_t                  | int
+                                    'c_time_t',     #| time_t                                 | int
+
+                                    'float',
+                                    'c_float',
+                                    'c_double',
+                                    'c_longdouble'
+                                    ]
+
+OLF_ConversionTable['float']    = [ 'c_float',      #| float                                  | float
+                                    'c_double',     #| double                                 | float
+                                    'c_longdouble'] #| long double                            | float
+
+OLF_ConversionTable['str']      = ['c_wchar_p']
 def createKey(argTypeList, **kwArgs):
 	return tuple(argTypeList)
 
